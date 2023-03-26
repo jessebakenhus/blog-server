@@ -20,7 +20,7 @@ public class ContentController {
     @Autowired
     private GitHub gitHubApi;
 
-    @PostMapping("/createContent/{slug}")
+    @PostMapping("/content/{slug}")
     public ResponseEntity<Object> createContent(@PathVariable String slug,
                                                 @RequestBody String content,
                                                 @RequestParam boolean draft) {
@@ -30,7 +30,7 @@ public class ContentController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/getContent/{slug}")
+    @GetMapping("/content/{slug}")
     public ResponseEntity<Blog> getContent(@PathVariable String slug,
                                               @RequestParam boolean draft) {
 
@@ -39,12 +39,12 @@ public class ContentController {
         return ResponseEntity.ok(blog);
     }
 
-    @GetMapping("/getContent")
+    @GetMapping("/content")
     public ResponseEntity<Collection<BlogDto>> getContent() {
         return ResponseEntity.ok(new ContentFactory(gitHubApi, settings).getContent());
     }
 
-    @DeleteMapping("/deleteContent/{slug}")
+    @DeleteMapping("/content/{slug}")
     public ResponseEntity<Void> deleteContent(@PathVariable String slug, @RequestParam boolean draft) {
 
         new ContentFactory(gitHubApi, settings).deleteContent(slug, draft);
@@ -52,7 +52,7 @@ public class ContentController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/updateContent/{slug}")
+    @PutMapping("/content/{slug}")
     public ResponseEntity<Void> updateContent(@PathVariable String oldSlug,
                                               @RequestParam String newSlug,
                                               @RequestBody String content,
