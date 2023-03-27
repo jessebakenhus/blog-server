@@ -1,5 +1,6 @@
 package com.jessebakenhus.blog.management.controller;
 
+import com.jessebakenhus.blog.management.model.AuthUser;
 import com.jessebakenhus.blog.management.repository.FakeUserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,10 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -24,15 +22,15 @@ public class AuthController {
     FakeUserRepository userRepository;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<String> login(@RequestBody AuthUser authUser) {
         try {
 
-            UserDetails userDetails = userRepository.loadUserByUsername(username);
+            UserDetails userDetails = userRepository.loadUserByUsername(authUser.getUsername());
 
-            if (password.equalsIgnoreCase(userDetails.getPassword())) {
+            if (authUser.getPassword().equalsIgnoreCase(userDetails.getPassword())) {
                 String token = Jwts.builder()
                         .setSubject(userDetails.getUsername())
-                        .signWith(SignatureAlgorithm.HS256, "b2c7053769bc44b49baa8c55398bd040".getBytes())
+                        .signWith(SignatureAlgorithm.HS256, System.getenv().get("JWT_TOKEN").getBytes())
                         .setIssuedAt(new Date())
                         .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
                         .compact();

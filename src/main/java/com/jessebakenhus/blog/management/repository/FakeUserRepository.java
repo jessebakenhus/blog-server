@@ -15,8 +15,8 @@ import java.util.List;
 @Repository
 public class FakeUserRepository implements UserDetailsService {
 
-    private List<FakeUser> users = Arrays.asList(
-            new FakeUser("admin", "admin",
+    private final List<FakeUser> users = List.of(
+            new FakeUser("admin", System.getenv().get("ADMIN_PASSWORD"),
                     Arrays.asList(
                             new SimpleGrantedAuthority("ROLE_USER"),
                             new SimpleGrantedAuthority("ROLE_ADMIN")))

@@ -36,7 +36,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             try {
 
                 String username = Jwts.parser()
-                        .setSigningKey("b2c7053769bc44b49baa8c55398bd040".getBytes())
+                        .setSigningKey(System.getenv().get("JWT_TOKEN").getBytes())
                         .parseClaimsJws(token)
                         .getBody()
                         .getSubject();
