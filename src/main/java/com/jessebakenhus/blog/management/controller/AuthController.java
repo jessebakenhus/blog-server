@@ -1,6 +1,8 @@
 package com.jessebakenhus.blog.management.controller;
 
 import com.jessebakenhus.blog.management.model.AuthUser;
+import com.jessebakenhus.blog.management.model.Token;
+import com.jessebakenhus.blog.management.model.Validation;
 import com.jessebakenhus.blog.management.repository.FakeUserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
+@CrossOrigin
 @RestController
 public class AuthController {
 
@@ -22,7 +25,7 @@ public class AuthController {
     FakeUserRepository userRepository;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthUser authUser) {
+    public ResponseEntity<Token> login(@RequestBody AuthUser authUser) {
         try {
 
             UserDetails userDetails = userRepository.loadUserByUsername(authUser.getUsername());
@@ -35,12 +38,17 @@ public class AuthController {
                         .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
                         .compact();
 
-                return ResponseEntity.ok(token);
+                return ResponseEntity.ok(Token.of(token));
             } else {
-                return ResponseEntity.badRequest().body("Invalid username or password");
+                return ResponseEntity.badRequest().build();
             }
         } catch (UsernameNotFoundException e) {
-            return ResponseEntity.badRequest().body("Invalid username or password");
+            return  ResponseEntity.badRequest().build();
         }
+    }
+
+    @PostMapping("validate/{token}")
+    public ResponseEntity<Validation> valid(@PathVariable String token) {
+        return ResponseEntity.ok(new Validation(token, false));
     }
 }

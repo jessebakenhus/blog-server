@@ -2,6 +2,7 @@ package com.jessebakenhus.blog.management.repository;
 
 import com.jessebakenhus.blog.management.model.FakeUser;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,8 +16,8 @@ import java.util.List;
 @Repository
 public class FakeUserRepository implements UserDetailsService {
 
-    private final List<FakeUser> users = List.of(
-            new FakeUser("admin", System.getenv().get("ADMIN_PASSWORD"),
+    private final List<User> users = List.of(
+            new User("admin", System.getenv().get("ADMIN_PASSWORD"),
                     Arrays.asList(
                             new SimpleGrantedAuthority("ROLE_USER"),
                             new SimpleGrantedAuthority("ROLE_ADMIN")))

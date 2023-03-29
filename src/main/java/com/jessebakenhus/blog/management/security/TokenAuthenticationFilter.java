@@ -22,7 +22,8 @@ import java.io.IOException;
 @Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
-    private final FakeUserRepository userRepository = new FakeUserRepository();
+    @Autowired
+    private FakeUserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
